@@ -1,4 +1,6 @@
 from requests_html import HTMLSession
+from bs4 import BeautifulSoup
+import json
 
 url = "https://www.beerwulf.com/en-gb/c/all-beers?segment=Beers&catalogCode=Beer_1"
 
@@ -12,8 +14,13 @@ links = r.html.xpath('//*[@id="product-items-container"]', first = True).absolut
 
 link = "https://www.beerwulf.com/en-gb/p/beers/newcastle-brown-ale-2l-keg"
 r = session.get(link)
-r.html.render()
+text = r.html.render(sleep=1)
+text = r.html.html
 
-with open("beerwulf.html","w") as file:
-    text = r.html.html
-    file.writelines(text)
+"""with open("beerwulf.html","w") as file:
+    file.writelines(text)"""
+
+soup = BeautifulSoup(text,"html.parser")
+script = soup.find("script",{"type":"application/ld+json"}).text.strip()
+json_script = json.loads(script)
+print(json_script['offers'])
