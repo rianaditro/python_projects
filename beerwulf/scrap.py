@@ -23,4 +23,19 @@ text = r.html.html
 soup = BeautifulSoup(text,"html.parser")
 script = soup.find("script",{"type":"application/ld+json"}).text.strip()
 json_script = json.loads(script)
-print(json_script['offers'])
+
+name = json_script["name"]
+image = json_script["image"]
+desc = json_script["description"]
+rating = json_script["aggregateRating"]["ratingValue"]
+price = json_script["offers"]["price"]
+url_product = link
+
+product_details = {"product name":name,
+                   "rating":rating,
+                   "price":price,
+                   "description":desc,
+                   "image":image,
+                   "url":url_product}
+
+print(product_details)
