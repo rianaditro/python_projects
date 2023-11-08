@@ -1,6 +1,7 @@
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup #auto installed after install requests-html
 import json #its default
+import pandas as pd
 
 def scrape_single_product(url):
     r = session.get(url)
@@ -32,11 +33,14 @@ if __name__ == "__main__":
     r.html.render(sleep=1,scrolldown=15)
     #get all links, 83 links
     links = r.html.xpath('//*[@id="product-items-container"]', first = True).absolute_links
+    #links = "https://www.beerwulf.com/en-gb/p/beers/newcastle-brown-ale-2l-keg"
 
     result_dict = []
 
-    #for link in links:
-    product_data = scrape_single_product(links[0])
-    result_dict.append(product_data)
-    #df = pd.DataFrame(result_dict)
-    result_dict.to_excel("beerwulf_result.xlsx", index=False)
+    for link in links:
+        product_data = scrape_single_product(link)
+        print("Scrap link #",len(result_dict))
+        result_dict.append(product_data)
+    df = pd.DataFrame(result_dict)
+    #return 82 data
+    df.to_excel("beerwulf_result.xlsx", index=False)
