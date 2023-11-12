@@ -36,11 +36,13 @@ if __name__ == "__main__":
     #links = "https://www.beerwulf.com/en-gb/p/beers/newcastle-brown-ale-2l-keg"
 
     result_dict = []
+    x= 1
 
     for link in links:
         product_data = scrape_single_product(link)
-        print("Scrap link #",len(result_dict))
+        print("Scrap link #",x)
         result_dict.append(product_data)
+        x = x+1
     df = pd.DataFrame(result_dict)
     #return 82 data
     df.to_excel("beerwulf_result.xlsx", index=False)

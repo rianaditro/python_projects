@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\CORTANA\python\ikea
+set VIRTUAL_ENV=C:\Users\CORTANA\python_projects\ikea
 
 if not defined PROMPT set PROMPT=$P$G
 
