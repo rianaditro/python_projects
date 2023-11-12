@@ -1,15 +1,19 @@
 from requests_html import HTMLSession
-from fake_useragent import UserAgent
-ua = UserAgent()
 
-url = "https://www.ikea.co.id/in/produk/dekorasi/jam"
+def access(url):
+    session = HTMLSession()
+    r = session.get(url)
+    return r
 
-session = HTMLSession()
-session.headers.update({'User-Agent':ua.random})
-r = session.get(url)
-print(r.status_code)
-r.html.render(sleep=1, timeout=10)
-#get the product list from the xpath
-product_links = r.html.absolute_links
-print(product_links)#none
-print(len(product_links))
+def get_all_links(main_url):
+    r = access(main_url)
+    product_links = r.html.xpath('//*[@id="product-list-component"]/div[4]/div',first = True).absolute_links
+    return product_links
+
+def parse():
+    None
+
+if __name__=="__main__":
+    main_url = "https://www.ikea.co.id/in/produk/dekorasi/jam"
+    product_links = get_all_links(main_url)
+    print(len(product_links))
