@@ -48,7 +48,6 @@ if __name__=="__main__":
     main_url = "https://www.ikea.co.id/in/produk/dekorasi/jam"
     product_links = get_all_links(main_url)
     for product in product_links:
-        print(product)
         product_parse = parse_product(product)
         print(product_parse)
         break
