@@ -1,11 +1,12 @@
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 import re
+import pandas
 
 def access(url):
     session = HTMLSession()
     r = session.get(url)
-    r.html.render(sleep=1,timeout=16)
+    r.html.render(sleep=1)
     return r
 
 def get_all_links(main_url):
@@ -44,11 +45,23 @@ def get_int(input):
         result += n
     return result
 
+def result_to_excel(data):
+    df = pandas.DataFrame(data)
+    df.to_excel("ikea.xlsx",index = False)
+
 if __name__=="__main__":
     main_url = "https://www.ikea.co.id/in/produk/dekorasi/jam"
     product_links = get_all_links(main_url)
+    result = []
+    n_product = len(product_links)
+    print(f"Generating {n_product} links..")
+    x = 1
     for product in product_links:
         product_parse = parse_product(product)
-        print(product_parse)
-        break
-    
+        result.append(product_parse)
+        print(f"Scraping {x} of {n_product} ...")
+        x += 1
+        if x == 3:
+            break
+    result_to_excel(result)
+
