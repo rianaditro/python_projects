@@ -5,7 +5,7 @@ import re
 def access(url):
     session = HTMLSession()
     r = session.get(url)
-    r.html.render(sleep=1)
+    r.html.render(sleep=1,timeout=16)
     return r
 
 def get_all_links(main_url):
@@ -19,15 +19,30 @@ def parse_product(product_url):
     name = find_data("div","d-flex flex-row",soup)
     summary = find_data("span", "itemFacts font-weight-normal",soup)
     price = find_data("p","itemNormalPrice display-6",soup)
-    price = re.findall(r'[\d]+',price)
+    price = get_int(price)
+    stocks = find_data("div", "quantityInStock",soup)
+    stocks = get_int(stocks)
 
     result = {"product name":name,
+              "summary":summary,
+              "price":price,
+              "stocks":stocks,
               "url":product_url}
     return result
 
 def find_data(tag, class_,soup):
-    data = soup.find(tag,class_).get_text().strip
+    try:
+        data = soup.find(tag,class_).get_text().strip()
+    except AttributeError:
+        data = None
     return data
+
+def get_int(input):
+    number = re.findall(r'[\d]+',str(input))
+    result = ""
+    for n in number:
+        result += n
+    return result
 
 if __name__=="__main__":
     main_url = "https://www.ikea.co.id/in/produk/dekorasi/jam"
