@@ -9,10 +9,31 @@ def access(url):
     r.html.render(sleep=1)
     return r
 
-def get_all_links(main_url):
-    r = access(main_url)
+def get_next_url_catalog(url):
+    r = access(url)
+    r.html.next(fetch=False)
+    return r
+
+def get_all_links(url):
+    r = access(url)
     product_links = r.html.xpath('//*[@id="product-list-component"]/div[4]/div', first=True).absolute_links
     return product_links
+
+def parse_catalog_product(url):
+    next_url = get_next_url_catalog(url)
+    product_links = get_all_links(url)
+    catalog = []
+    n_product = len(product_links)
+    print(f"Found {n_product} links")
+    x = 1
+    for product in product_links:
+        product_parse = parse_product(product)
+        catalog.append(product_parse)
+        print(f"Scraping {x} of {n_product} ...")
+        x += 1
+    if next_url:
+        print("Next page found! Processing..")
+    return next_url,catalog
 
 def parse_product(product_url):
     r = access(product_url)
@@ -49,19 +70,13 @@ def result_to_excel(data):
     df = pandas.DataFrame(data)
     df.to_excel("ikea.xlsx",index = False)
 
+
 if __name__=="__main__":
-    main_url = "https://www.ikea.co.id/in/produk/dekorasi/jam"
-    product_links = get_all_links(main_url)
+    main_url = "https://www.ikea.co.id/in/produk/dekorasi-kamar-tidur/tanaman-hias"
     result = []
-    n_product = len(product_links)
-    print(f"Generating {n_product} links..")
-    x = 1
-    for product in product_links:
-        product_parse = parse_product(product)
-        result.append(product_parse)
-        print(f"Scraping {x} of {n_product} ...")
-        x += 1
-        if x == 3:
-            break
+    next_url,catalog = parse_catalog_product(main_url)
+    result.append(catalog)
+    while next_url:
+        next_url,catalog = parse_catalog_product(next_url)    
     result_to_excel(result)
 
