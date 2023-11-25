@@ -10,3 +10,13 @@ Manually upgrade chromium :
 5. Open pyppeteer folder (in this case i am using venv) C:\Users\CORTANA\python_projects\ikea\Lib\site-packages\pyppeteer\__init__.py
 6. Change the value of __chromium_revision__ to your version. Mine was __chromium_revision__ = '1223356'
 7. save and we are ready to go
+
+or simply using terminal by:
+1. export PYPPETEER_CHROMIUM_REVISION=1204234
+this is linux version for me
+2. pyppeteer-install
+done
+pretty much easier huh?
+but if you like to manually on linux, then goes here :
+/home/asus/.local/share/pyppeteer/local-chromium/1204234
+more or less is same like the top on windows
